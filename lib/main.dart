@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -8,6 +5,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,132 +22,224 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String millisecondsText = "";
-  GameState gameState = GameState.readyToStart;
-
-  Timer? waitingTimer;
-  Timer? stoppableTimer;
+  BodyPart? defendingBodyPart;
+  BodyPart? attackingBodyPart;
+  Color colorButtonGo = Colors.black38;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF282E3D),
-      body: Stack(children: [
-        Align(
-          alignment: const Alignment(0, -0.8),
-          child: Text(
-            "Test your\nreaction speed",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 38, fontWeight: FontWeight.w900, color: Colors.white),
+      backgroundColor: const Color.fromRGBO(213, 222, 240, 1),
+      body: Column(
+        children: [
+          SizedBox(height: 40),
+          Row(
+            children: [
+              SizedBox(width: 16),
+              Expanded(child: Center(child: Text("You"))),
+              SizedBox(width: 12),
+              Expanded(child: Center(child: Text("Enemy"))),
+              SizedBox(width: 16),
+            ],
           ),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: ColoredBox(
-            color: const  Color(0xFF6D6D6D),
-            child: SizedBox(
-              height: 160,
-              width: 300,
-              child: Center(
-                child: Text(
-                  millisecondsText,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white),
+          SizedBox(height: 8),
+          Row(
+            children: [
+              SizedBox(width: 16),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  children: [
+                    Center(child: Text("1")),
+                    Center(child: Text("1")),
+                    Center(child: Text("1")),
+                    Center(child: Text("1")),
+                    Center(child: Text("1")),
+                  ],
                 ),
               ),
-            ),
+              SizedBox(width: 12),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  children: [
+                    Center(child: Text("1")),
+                    Center(child: Text("1")),
+                    Center(child: Text("1")),
+                    Center(child: Text("1")),
+                    Center(child: Text("1")),
+                  ],
+                ),
+              ),
+              SizedBox(width: 16),
+            ],
           ),
-        ),
-        Align(
-          alignment: const Alignment(0, 0.8),
-          child: GestureDetector(
-            onTap: () => setState(() {
-              switch (gameState) {
-                case GameState.readyToStart:
-                  gameState = GameState.waiting;
-                  millisecondsText = "";
-                  _startWaitingTimer();
-                  break;
-                case GameState.waiting:
-                  break;
-                case GameState.canBeStopped:
-                  gameState = GameState.readyToStart;
-                  stoppableTimer?.cancel();
-                  break;
-              }
-            }),
-            child: ColoredBox(
-              color: _getBottomButtonColor(),
-              child: SizedBox(
-                height: 200,
-                width: 200,
-                child: Center(
-                  child: Text(
-                    _getButtonText(),
-                    style: TextStyle(
-                        fontSize: 38,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.white),
+          Expanded(child: SizedBox()),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text("Defend".toUpperCase()),
+                    SizedBox(
+                      height: 13,
+                    ),
+                    BodyPartButton(
+                      bodyPart: BodyPart.head,
+                      selected: defendingBodyPart == BodyPart.head,
+                      bodyPartSetter: _selectDefendingBodyPart,
+                    ),
+                    SizedBox(height: 14),
+                    BodyPartButton(
+                      bodyPart: BodyPart.torso,
+                      selected: defendingBodyPart == BodyPart.torso,
+                      bodyPartSetter: _selectDefendingBodyPart,
+                    ),
+                    SizedBox(height: 14),
+                    BodyPartButton(
+                      bodyPart: BodyPart.legs,
+                      selected: defendingBodyPart == BodyPart.legs,
+                      bodyPartSetter: _selectDefendingBodyPart,
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text("Attack".toUpperCase()),
+                    SizedBox(
+                      height: 13,
+                    ),
+                    BodyPartButton(
+                      bodyPart: BodyPart.head,
+                      selected: attackingBodyPart == BodyPart.head,
+                      bodyPartSetter: _selectAttackingBodyPart,
+                    ),
+                    SizedBox(height: 14),
+                    BodyPartButton(
+                      bodyPart: BodyPart.torso,
+                      selected: attackingBodyPart == BodyPart.torso,
+                      bodyPartSetter: _selectAttackingBodyPart,
+                    ),
+                    SizedBox(height: 14),
+                    BodyPartButton(
+                      bodyPart: BodyPart.legs,
+                      selected: attackingBodyPart == BodyPart.legs,
+                      bodyPartSetter: _selectAttackingBodyPart,
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(width: 16),
+            ],
+          ),
+          SizedBox(height: 14),
+          Row(
+            children: [
+              SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                  child: SizedBox(
+                height: 40,
+                child: GestureDetector(
+                  onTap: _onTapButtonGo,
+                  child: ColoredBox(
+                    color: colorButtonGo,
+                    child: Center(
+                        child: Text(
+                      "Go".toUpperCase(),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 16,
+                          color: Colors.white),
+                    )),
                   ),
                 ),
+              )),
+              SizedBox(
+                width: 16,
               ),
-            ),
+            ],
           ),
-        ),
-      ]),
+          SizedBox(height: 40)
+        ],
+      ),
     );
   }
 
-  String _getButtonText() {
-    switch (gameState) {
-      case GameState.readyToStart:
-        return "START";
-      case GameState.waiting:
-        return "WAIT";
-      case GameState.canBeStopped:
-        return "STOP";
-    }
-  }
-  Color _getBottomButtonColor() {
-    switch (gameState) {
-      case GameState.readyToStart:
-        return const Color(0xFF40CA88);
-      case GameState.waiting:
-        return const Color(0xFFE0982D);
-      case GameState.canBeStopped:
-        return const Color(0xFFE02D47);
-    }
-  }
-
-  void _startWaitingTimer() {
-    final int randomMilliseconds = Random().nextInt(4000) + 1000;
-    waitingTimer = Timer(Duration(milliseconds: randomMilliseconds), () {
-      setState(() {
-        gameState = GameState.canBeStopped;
-      });
-      _startStoppableTimer();
+  void _selectDefendingBodyPart(final BodyPart value) {
+    setState(() {
+      defendingBodyPart = value;
+      if (attackingBodyPart != null) {
+        colorButtonGo = Colors.black87;
+      }
     });
   }
 
-  void _startStoppableTimer() {
-    stoppableTimer = Timer.periodic(Duration(milliseconds: 16), (timer) {
-      setState(() {
-        millisecondsText = "${timer.tick * 16} ms";
-      });
+  void _selectAttackingBodyPart(final BodyPart value) {
+    setState(() {
+      attackingBodyPart = value;
+      if (defendingBodyPart != null) {
+        colorButtonGo = Colors.black87;
+      }
     });
   }
 
-  @override
-  void dispose() {
-    waitingTimer?.cancel();
-    stoppableTimer?.cancel();
-    super.dispose();
+  void _onTapButtonGo() {
+    if (attackingBodyPart != null && defendingBodyPart != null) {
+      setState(() {
+        defendingBodyPart = null;
+        attackingBodyPart = null;
+        colorButtonGo = Colors.black38;
+      });
+    }
   }
-
 }
 
-enum GameState { readyToStart, waiting, canBeStopped }
+class BodyPart {
+  final String name;
+
+  const BodyPart._(this.name);
+
+  static const head = BodyPart._("Head");
+  static const torso = BodyPart._("Torso");
+  static const legs = BodyPart._("Legs");
+
+  @override
+  String toString() {
+    return 'BodyPart{name: $name}';
+  }
+}
+
+class BodyPartButton extends StatelessWidget {
+  final BodyPart bodyPart;
+  final bool selected;
+  final ValueSetter<BodyPart> bodyPartSetter;
+
+  const BodyPartButton({
+    Key? key,
+    required this.bodyPart,
+    required this.selected,
+    required this.bodyPartSetter,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => bodyPartSetter(bodyPart),
+      child: SizedBox(
+        height: 40,
+        child: ColoredBox(
+          color:
+              selected ? const Color.fromRGBO(28, 121, 206, 1) : Colors.black38,
+          child: Center(child: Text(bodyPart.name.toUpperCase())),
+        ),
+      ),
+    );
+  }
+}
