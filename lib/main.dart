@@ -41,7 +41,7 @@ class MyHomePageState extends State<MyHomePage> {
 
   Color colorButtonGo = FightClubColors.greyButton;
   int yourLives = maxLives;
-  int enemyLives = maxLives;
+  int enemysLives = maxLives;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class MyHomePageState extends State<MyHomePage> {
             FightersInfo(
               maxLivesCount: maxLives,
               yourLivesCount: yourLives,
-              enemyLivesCount: enemyLives,
+              enemyLivesCount: enemysLives,
             ),
             SizedBox(
               height: 30,
@@ -79,7 +79,7 @@ class MyHomePageState extends State<MyHomePage> {
             GoButton(
               onTap: _onGoButtonClicked,
               color: colorButtonGo,
-              text: yourLives == 0 || enemyLives == 0 ? "Start new game" : "Go",
+              text: yourLives == 0 || enemysLives == 0 ? "Start new game" : "Go",
             ),
             SizedBox(height: 16)
           ],
@@ -91,7 +91,7 @@ class MyHomePageState extends State<MyHomePage> {
   void _selectDefendingBodyPart(final BodyPart value) {
     setState(() {
       defendingBodyPart = value;
-      if (attackingBodyPart != null || yourLives == 0 || enemyLives == 0) {
+      if (attackingBodyPart != null || yourLives == 0 || enemysLives == 0) {
         colorButtonGo = FightClubColors.blackButton;
       }
     });
@@ -100,17 +100,17 @@ class MyHomePageState extends State<MyHomePage> {
   void _selectAttackingBodyPart(final BodyPart value) {
     setState(() {
       attackingBodyPart = value;
-      if (defendingBodyPart != null || yourLives == 0 || enemyLives == 0) {
+      if (defendingBodyPart != null || yourLives == 0 || enemysLives == 0) {
         colorButtonGo = FightClubColors.blackButton;
       }
     });
   }
 
   void _onGoButtonClicked() {
-    if (yourLives == 0 || enemyLives == 0) {
+    if (yourLives == 0 || enemysLives == 0) {
       setState(() {
         yourLives = maxLives;
-        enemyLives = maxLives;
+        enemysLives = maxLives;
         colorButtonGo = FightClubColors.greyButton;
       });
     } else if (attackingBodyPart != null && defendingBodyPart != null) {
@@ -119,7 +119,7 @@ class MyHomePageState extends State<MyHomePage> {
         final bool youLoseLife = defendingBodyPart != whatEnemyAttacks;
 
         if (enemyLoseLife) {
-          enemyLives--;
+          enemysLives--;
         }
 
         if (youLoseLife) {
@@ -132,7 +132,7 @@ class MyHomePageState extends State<MyHomePage> {
         defendingBodyPart = null;
         attackingBodyPart = null;
 
-        colorButtonGo = yourLives == 0 || enemyLives == 0
+        colorButtonGo = yourLives == 0 || enemysLives == 0
             ? FightClubColors.blackButton
             : FightClubColors.greyButton;
       });
