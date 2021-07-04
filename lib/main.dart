@@ -37,7 +37,7 @@ class MyHomePageState extends State<MyHomePage> {
   BodyPart? defendingBodyPart;
   BodyPart? attackingBodyPart;
   BodyPart whatEnemyAttacks = BodyPart.random();
-  BodyPart whatEnemyDeffends = BodyPart.random();
+  BodyPart whatEnemyDefends = BodyPart.random();
 
   Color colorButtonGo = FightClubColors.greyButton;
   int yourLives = maxLives;
@@ -115,7 +115,7 @@ class MyHomePageState extends State<MyHomePage> {
       });
     } else if (attackingBodyPart != null && defendingBodyPart != null) {
       setState(() {
-        final bool enemyLoseLife = attackingBodyPart != whatEnemyDeffends;
+        final bool enemyLoseLife = attackingBodyPart != whatEnemyDefends;
         final bool youLoseLife = defendingBodyPart != whatEnemyAttacks;
 
         if (enemyLoseLife) {
@@ -126,7 +126,7 @@ class MyHomePageState extends State<MyHomePage> {
           yourLives--;
         }
 
-        whatEnemyDeffends = BodyPart.random();
+        whatEnemyDefends = BodyPart.random();
         whatEnemyAttacks = BodyPart.random();
 
         defendingBodyPart = null;
