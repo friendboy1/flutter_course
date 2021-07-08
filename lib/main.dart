@@ -142,9 +142,6 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   void _onGoButtonClicked() {
-    if (attackingBodyPart != null && defendingBodyPart != null) {
-      _setInfoText();
-    }
     if (yourLives == 0 || enemysLives == 0) {
       setState(() {
         yourLives = maxLives;
@@ -174,6 +171,9 @@ class MyHomePageState extends State<MyHomePage> {
             ? FightClubColors.blackButton
             : FightClubColors.greyButton;
       });
+    }
+    if (attackingBodyPart != null && defendingBodyPart != null) {
+      _setInfoText();
     }
   }
 }
