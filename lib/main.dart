@@ -135,7 +135,7 @@ class MyHomePageState extends State<MyHomePage> {
         infoText += "\nEnemy’s attack was blocked.";
       } else {
         infoText +=
-            "\nEnemy hit your " + defendingBodyPart!.name.toLowerCase() + ".";
+            "\nEnemy hit your " + whatEnemyAttacks!.name.toLowerCase() + ".";
       }
       return;
     }
