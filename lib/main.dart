@@ -124,7 +124,7 @@ class MyHomePageState extends State<MyHomePage> {
       infoText = "You lost";
       return;
     }
-    if (yourLives > 0 && enemysLives > 0) {
+    if (yourLives >= 0 && enemysLives >= 0) {
       if (attackingBodyPart == whatEnemyDefends) {
         infoText = "Your attack was blocked.";
       } else {
