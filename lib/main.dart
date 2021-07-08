@@ -79,7 +79,8 @@ class MyHomePageState extends State<MyHomePage> {
             GoButton(
               onTap: _onGoButtonClicked,
               color: colorButtonGo,
-              text: yourLives == 0 || enemysLives == 0 ? "Start new game" : "Go",
+              text:
+                  yourLives == 0 || enemysLives == 0 ? "Start new game" : "Go",
             ),
             SizedBox(height: 16)
           ],
@@ -360,21 +361,30 @@ class LivesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
         mainAxisSize: MainAxisSize.min,
-        children: List.generate(overallLivesCount, (index) {
-          if (index < currentLivesCount) {
-            return Center(
-                child: Image.asset(
-              FightClubIcons.heartFull,
-              width: 18,
-              height: 18,
-            ));
+        children: List.generate(overallLivesCount * 2 - 1, (index) {
+          if (index % 2 == 0) {
+            if (index < currentLivesCount) {
+              return Center(
+                  child: Image.asset(
+                FightClubIcons.heartFull,
+                width: 18,
+                height: 18,
+              ));
+            } else {
+              return Center(
+                  child: Image.asset(
+                FightClubIcons.heartEmpty,
+                width: 18,
+                height: 18,
+              ));
+            }
           } else {
             return Center(
-                child: Image.asset(
-              FightClubIcons.heartEmpty,
-              width: 18,
-              height: 18,
-            ));
+              child: SizedBox(
+                height: 4,
+                width: 4,
+              ),
+            );
           }
         }));
   }
