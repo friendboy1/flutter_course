@@ -161,6 +161,8 @@ class MyHomePageState extends State<MyHomePage> {
           yourLives--;
         }
 
+        _setInfoText();
+
         whatEnemyDefends = BodyPart.random();
         whatEnemyAttacks = BodyPart.random();
 
@@ -171,9 +173,6 @@ class MyHomePageState extends State<MyHomePage> {
             ? FightClubColors.blackButton
             : FightClubColors.greyButton;
       });
-    }
-    if (attackingBodyPart != null && defendingBodyPart != null) {
-      _setInfoText();
     }
   }
 }
