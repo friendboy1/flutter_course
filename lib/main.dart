@@ -42,6 +42,7 @@ class MyHomePageState extends State<MyHomePage> {
   Color colorButtonGo = FightClubColors.greyButton;
   int yourLives = maxLives;
   int enemysLives = maxLives;
+  String infoText = "";
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +66,9 @@ class MyHomePageState extends State<MyHomePage> {
                   color: Color.fromRGBO(197, 209, 234, 1),
                   child: SizedBox(
                     width: double.infinity,
+                    child: Center(
+                      child: Text(infoText),
+                    ),
                   )),
             )),
             SizedBox(
@@ -107,7 +111,40 @@ class MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _setInfoText() {
+    if (yourLives == 0 && enemysLives == 0) {
+      infoText = "Draw";
+      return;
+    }
+    if (yourLives > 0 && enemysLives == 0) {
+      infoText = "You won";
+      return;
+    }
+    if (yourLives == 0 && enemysLives > 0) {
+      infoText = "You lost";
+      return;
+    }
+    if (yourLives > 0 && enemysLives > 0) {
+      if (attackingBodyPart == whatEnemyDefends) {
+        infoText = "Your attack was blocked.";
+      } else {
+        infoText =
+            "You hit enemy’s " + attackingBodyPart!.name.toLowerCase() + ".";
+      }
+      if (defendingBodyPart == whatEnemyAttacks) {
+        infoText += "\nEnemy’s attack was blocked.";
+      } else {
+        infoText +=
+            "\nEnemy hit your " + defendingBodyPart!.name.toLowerCase() + ".";
+      }
+      return;
+    }
+  }
+
   void _onGoButtonClicked() {
+    if (attackingBodyPart != null && defendingBodyPart != null) {
+      _setInfoText();
+    }
     if (yourLives == 0 || enemysLives == 0) {
       setState(() {
         yourLives = maxLives;
