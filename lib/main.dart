@@ -42,7 +42,7 @@ class MyHomePageState extends State<MyHomePage> {
   Color colorButtonGo = FightClubColors.greyButton;
   int yourLives = maxLives;
   int enemysLives = maxLives;
-  String infoText = "";
+  String centerText = "";
 
   @override
   Widget build(BuildContext context) {
@@ -56,24 +56,24 @@ class MyHomePageState extends State<MyHomePage> {
               yourLivesCount: yourLives,
               enemyLivesCount: enemysLives,
             ),
-            SizedBox(
-              height: 30,
-            ),
+            const SizedBox(height: 30),
             Expanded(
                 child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ColoredBox(
-                  color: Color.fromRGBO(197, 209, 234, 1),
+                  color: FightClubColors.darkPurple,
                   child: SizedBox(
                     width: double.infinity,
                     child: Center(
-                      child: Text(infoText),
+                      child: Text(
+                        centerText,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: FightClubColors.darkGreyText),
+                      ),
                     ),
                   )),
             )),
-            SizedBox(
-              height: 30,
-            ),
+            const SizedBox(height: 30),
             ControlsWidget(
                 defendingBodyPart: defendingBodyPart,
                 selectDefendingBodyPart: _selectDefendingBodyPart,
@@ -111,33 +111,21 @@ class MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _setInfoText() {
+  void _setCenterText() {
     if (yourLives == 0 && enemysLives == 0) {
-      infoText = "Draw";
-      return;
-    }
-    if (yourLives > 0 && enemysLives == 0) {
-      infoText = "You won";
-      return;
-    }
-    if (yourLives == 0 && enemysLives > 0) {
-      infoText = "You lost";
-      return;
-    }
-    if (yourLives >= 0 && enemysLives >= 0) {
-      if (attackingBodyPart == whatEnemyDefends) {
-        infoText = "Your attack was blocked.";
-      } else {
-        infoText =
-            "You hit enemy's " + attackingBodyPart!.name.toLowerCase() + ".";
-      }
-      if (defendingBodyPart == whatEnemyAttacks) {
-        infoText += "\nEnemy's attack was blocked.";
-      } else {
-        infoText +=
-            "\nEnemy hit your " + whatEnemyAttacks!.name.toLowerCase() + ".";
-      }
-      return;
+      centerText = "Draw";
+    } else if (yourLives > 0 && enemysLives == 0) {
+      centerText = "You won";
+    } else if (yourLives == 0 && enemysLives > 0) {
+      centerText = "You lost";
+    } else {
+      String first = attackingBodyPart == whatEnemyDefends
+          ? "Your attack was blocked."
+          : "You hit enemy's ${attackingBodyPart!.name.toLowerCase()}.";
+      String second = defendingBodyPart == whatEnemyAttacks
+          ? "Enemy's attack was blocked."
+          : "Enemy hit your ${whatEnemyAttacks.name.toLowerCase()}.";
+      centerText = "$first\n$second";
     }
   }
 
@@ -161,7 +149,7 @@ class MyHomePageState extends State<MyHomePage> {
           yourLives--;
         }
 
-        _setInfoText();
+        _setCenterText();
 
         whatEnemyDefends = BodyPart.random();
         whatEnemyAttacks = BodyPart.random();
@@ -320,10 +308,8 @@ class FightersInfo extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(flex: 1, child: ColoredBox(color: Colors.white)),
-              Expanded(
-                  flex: 1,
-                  child: ColoredBox(color: Color.fromRGBO(197, 209, 234, 1))),
+              Expanded(child: ColoredBox(color: Colors.white)),
+              Expanded(child: ColoredBox(color: FightClubColors.darkPurple)),
             ],
           ),
           Row(
